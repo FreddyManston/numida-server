@@ -50,13 +50,28 @@ class ExistingLoans(graphene.ObjectType):
     name = graphene.String()
     interest_rate = graphene.Float()
     principal = graphene.Int()
+    due_date = graphene.Date()
+
+class LoanPayments(graphene.ObjectType):
+    id = graphene.Int()
+    loan_id = graphene.Int()
+    payment_date = graphene.Date()
 
 
 class Query(graphene.ObjectType):
     loans = graphene.List(ExistingLoans)
+    loan_payments = graphene.List(LoanPayments)
+
+    hello = graphene.String(name=graphene.String(default_value="stranger"))
 
     def resolve_loans(self, info):
         return loans
+
+    def resolve_loan_payments(self, info):
+        return loan_payments
+    
+    def resolve_hello(self, info, name):
+        return f"Hello {name}"
 
 
 schema = graphene.Schema(query=Query)
@@ -70,6 +85,16 @@ app.add_url_rule(
 @app.route("/")
 def home():
     return "Welcome to the Loan Application API"
+
+@app.route("/loans")
+def existing_loans_endpoint():
+    result = schema.execute(" {loans { id, name, interestRate, principal, dueDate } }")
+    return result.data
+
+@app.route("/loan_payments")
+def loan_payments_endpoint():
+    result = schema.execute("{ loanPayments { id, loanId, paymentDate} }")
+    return result.data
 
 
 if __name__ == "__main__":

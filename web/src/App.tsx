@@ -9,12 +9,12 @@ const AddNewPayment = () => {
                 }}
             >
                 <p>
-                    <label>Payment Loan Id</label>
+                    <label>Payment Loan Id: </label>
                     <input name="loan-id" onChange={() => {}} />
                 </p>
 
                 <p>
-                    <label>Payment Amount</label>
+                    <label>Payment Amount: </label>
                     <input
                         name="payment-amount"
                         type="number"
