@@ -77,69 +77,45 @@ const DisplayCategorizedLoans = () => {
     return (
         <div>
             <h2>Categorized Loans</h2>
-            <ul>
-                {categorizedLoans.map((loan: any) => (
-                    <li key={loan.id}>
-                        <strong>Loan Name:</strong> {loan.name} <br />
-                        <strong>Interest Rate:</strong> {loan.interestRate}% <br />
-                        <strong>Principal:</strong> ${loan.principal} <br />
-                        <strong>Due Date:</strong> {loan.dueDate} <br />
-                        <strong>Status:</strong> <span style={{ color: loan.status === 'Defaulted' ? 'red' : 
-                                                                loan.status === 'Late' ? 'orange' : 
-                                                                loan.status === 'On Time' ? 'green' : 'grey' }}>
-                            {loan.status}
-                        </span>
-                        <LoanCalculator principal={loan.principal} rate={loan.interestRate} months={2}></LoanCalculator>
-                        <hr />
-                    </li>
-                ))}
-            </ul>
+            <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead style={{ position: 'sticky', top: 0, background: 'black' }}>
+                        <tr>
+                            <th style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>Name</th>
+                            <th style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>Interest Rate</th>
+                            <th style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>Principal</th>
+                            <th style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>Due Date</th>
+                            <th style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>Payment Date</th>
+                            <th style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>Status</th>
+                            <th style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>Loan Interest</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {categorizedLoans.map((loan: any) => (
+                            <tr key={loan.id}>
+                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{loan.name}</td>
+                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{loan.interestRate}%</td>
+                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>${loan.principal}</td>
+                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{loan.dueDate}</td>
+                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>{loan.paymentDate || '-'}</td>
+                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>
+                                    <span style={{ color: loan.status === 'Defaulted' ? 'red' : 
+                                                        loan.status === 'Late' ? 'orange' : 
+                                                        loan.status === 'On Time' ? 'green' : 'grey' }}>
+                                        {loan.status}
+                                    </span>
+                                </td>
+                                <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>
+                                    <LoanCalculator principal={loan.principal} rate={loan.interestRate} months={2} />
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };
-
-
-const DisplayLoans = () => {
-    const { loading: loan_loading, error: loan_error, data: loan_data } = useQuery(GET_LOANS)
-    const { loading: loan_payment_loading, error: loan_payment_error, data: loan_payment_data } = useQuery(GET_LOAN_PAYMENTS)
-
-    if (loan_loading || loan_payment_loading) return <p>Loading loans...</p>
-    if (loan_error || loan_payment_error) return <p>Error loading loans</p>
-    // ✅ Check if 'data' and 'data.loans' exist before mapping
-    if (!loan_data || !loan_payment_data || 
-        !loan_data.loans || loan_data.loans.length === 0 ||
-        !loan_payment_data.loanPayments || loan_payment_data.loanPayments.length === 0
-    ) {
-        return <p>No loans available.</p>;
-    }
-
-    return (
-        <div>
-            <h1>Existing Loans</h1>
-            <ul>
-                {loan_data.loans.map((loan: any) => (
-                    <li key={loan.id}>
-                        <strong>Loan Name:</strong> {loan.name} <br />
-                        <strong>Interest Rate:</strong> {loan.interestRate}% <br />
-                        <strong>Principal:</strong> ${loan.principal} <br />
-                        <strong>Due Date:</strong> {loan.dueDate} <br />
-                        <hr />
-                    </li>
-                ))}
-            </ul>
-            <h1>Loan Payments</h1>
-            <ul>
-                {loan_payment_data.loanPayments.map((loan_payment: any) => (
-                    <li key={loan_payment.id}>
-                        <strong>Loan ID:</strong> {loan_payment.loanId} <br />
-                        <strong>Loan Payment Date:</strong> {loan_payment.paymentDate} <br />
-                        <hr />
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
-}
 
 const AddNewPayment = () => {
     return (
