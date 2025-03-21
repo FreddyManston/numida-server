@@ -107,6 +107,7 @@ const DisplayCategorizedLoans = () => {
                                     </span>
                                 </td>
                                 <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>
+                                    {/* TODO: Figure out how the month is meant to be calculated if only days are given */}
                                     <LoanCalculator principal={loan.principal} rate={loan.interestRate} months={1} />
                                 </td>
                             </tr>
