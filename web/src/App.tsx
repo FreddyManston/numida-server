@@ -4,11 +4,12 @@ import { ApolloClient, InMemoryCache, ApolloProvider, gql, useQuery } from '@apo
 import { LoanCalculator } from './components/LoanCalculator';
 
 const client = new ApolloClient({
-    uri: 'http://localhost:2024/graphql', // Adjust this if your backend runs on a different port
+    // TODO: figure out why the /loan and /loan_payment endpoints on port 5000 isn't working
+    uri: 'http://localhost:2024/graphql',
     cache: new InMemoryCache(),
 })
 
-// GraphQL Query to Get Existing Loans
+// GraphQL Queries to get Loan and Loan Payment data:
 const GET_LOANS = gql`
     query
     {
@@ -22,7 +23,6 @@ const GET_LOANS = gql`
         }
     }
 `
-// GraphQL Query to Get Existing Loans
 const GET_LOAN_PAYMENTS = gql`
     query
     {
@@ -49,7 +49,7 @@ const getLoanStatus = (dueDate: string, paymentDate: string | null): string => {
 };
 
 // Helper function to categorize loan payments
-const useCategorizedLoanPayments = () => {
+const getCategorizedLoanPayments = () => {
     const { data: loanData } = useQuery(GET_LOANS);
     const { data: paymentData } = useQuery(GET_LOAN_PAYMENTS);
 
@@ -67,8 +67,9 @@ const useCategorizedLoanPayments = () => {
     }));
 };
 
+// Consider splitting this out if it becomes too complex
 const DisplayCategorizedLoans = () => {
-    const categorizedLoans = useCategorizedLoanPayments();
+    const categorizedLoans = getCategorizedLoanPayments();
     const { loading } = useQuery(GET_LOANS);
 
     if (loading) return <p>Loading...</p>;
@@ -106,7 +107,7 @@ const DisplayCategorizedLoans = () => {
                                     </span>
                                 </td>
                                 <td style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>
-                                    <LoanCalculator principal={loan.principal} rate={loan.interestRate} months={2} />
+                                    <LoanCalculator principal={loan.principal} rate={loan.interestRate} months={1} />
                                 </td>
                             </tr>
                         ))}

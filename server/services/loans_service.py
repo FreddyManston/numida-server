@@ -19,6 +19,9 @@ def get_loan_payments():
 #       }
 #       That way we don't need a 2nd loop.
 def get_categorised_loan_payments():
+    # I guess we don't actually need this endpoint - since we're doing it on the client side. Reasons being:
+    #   - This isn't pertinent business logic - more of a presentation logic - so it can be done on the client side
+    #   - I couldn't figure out the how to surface this from the server to the client quick enough
     loans = get_loans()
     loan_payments = get_loan_payments()
 
