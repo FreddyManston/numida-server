@@ -3,7 +3,7 @@ from flask_graphql import GraphQLView
 from graphene import Schema
 from schemas.loan_payments_schema import Query as LoanPaymentQuery
 from schemas.loans_schema import Query as LoanQuery
-from services import loan_payments_service, loans_service
+from services import loans_service
 
 blueprint = Blueprint("loans", __name__)
 
@@ -29,4 +29,8 @@ def existing_loans_endpoint():
 
 @blueprint.route("/loan_payments")
 def loan_payments_endpoint():
-    return loan_payments_service.get_loan_payments()
+    return loans_service.get_loan_payments()
+
+@blueprint.route("/categorised_loan_payments")
+def categorised_loan_payments_endpoint():
+    return loans_service.get_categorised_loan_payments()
